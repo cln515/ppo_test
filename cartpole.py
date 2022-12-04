@@ -28,7 +28,7 @@ class cartpole:
             p.changeDynamics(self.cartpole, -1, linearDamping=0, angularDamping=0)
             p.changeDynamics(self.cartpole, 0, linearDamping=0, angularDamping=0)
             p.changeDynamics(self.cartpole, 1, linearDamping=0, angularDamping=0)
-            self.timeStep = 0.02
+            self.timeStep = 0.005
             p.setJointMotorControl2(self.cartpole, 1, p.VELOCITY_CONTROL, force=0)
             p.setJointMotorControl2(self.cartpole, 0, p.VELOCITY_CONTROL, force=0)
             p.setGravity(0, 0, -9.8)
@@ -47,7 +47,11 @@ class cartpole:
 
     def step(self, action):
         p=self._p
-        force = action[0]
+        if action == 0:
+            force = 1
+        else:
+            force = -1
+
         p.setJointMotorControl2(self.cartpole,0,p.TORQUE_CONTROL, force=force)
         p.stepSimulation()
 

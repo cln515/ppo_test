@@ -4,23 +4,34 @@ from agent import ppo_agent
 
 if __name__ == "__main__":
     env = cartpole()
-    obs_state = env.reset()
+    p_obs_state = env.reset()
     agent = ppo_agent()
     step = 0
     total_reward = 0
+
+    iteration = 0
+
     while True:
-        action = agent.action(obs_state)
+        if iteration % 10000 < 100:
+            test = True
+        else:
+            test = False
+        action = agent.action(p_obs_state)
         obs_state, reward, terminate  = env.step(action)
-        agent.record(obs_state,reward,terminate)
+
+        if not test:
+            agent.record(p_obs_state,action,reward,obs_state)
         total_reward += reward
         step += 1
-        #sleep(0.001)
-        # terminate
+        p_obs_state = obs_state
+        
         if step >= 1000 or terminate:
-            print ("reset;", total_reward, step)
+            print ("reset;", total_reward, step, iteration)
+            iteration += 1
             step = 0
             total_reward = 0
-            agent.update()
+            if not test:
+                agent.update()
             env.reset()
 
 
